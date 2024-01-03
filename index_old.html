@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Welcome Vincent</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FFFFFF;
+        }
+
+        .no-close .ui-dialog-titlebar-close {
+          display: none;
+        }
+
+        .dataTables_wrapper .dataTables_paginate {
+          color: #ddd !important;
+        }
+    </style>
+    <link rel="stylesheet" href="assets/js/jquery-ui/jquery-ui.css">
+    <link rel="stylesheet" href="assets/js/jquery-ui/jquery-ui.theme.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/dataTables.jqueryui.css">
+    <!--<link rel="stylesheet" href="assets/js/slick/slick.css" />-->
+
+    <script src="assets/js/pixi/pixi.dev.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="assets/js/jquery-1.8.0.min.js"></script>
+    <script src="assets/js/jquery-ui/jquery-ui.min.js"></script>
+    <script src="assets/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="assets/js/dataTables.jqueryui.js"></script>
+
+    -<script src="assets/js/app.js"></script>
+  </head>
+  <body>
+  <div id="loginBox">
+    <form>
+      <fieldset style="border: 0; padding-left: 0; padding-right: 0">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" value="" class="text ui-widget-content ui-corner-all" style="padding: 4px; width: 100%;">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" style="padding: 4px; width: 100%;"><br/>
+        <input type="checkbox" name="stayLoggedIn" id="stayLoggedIn" value="yes"> <label for="stayLoggedIn">Keep me logged in</label>
+      </fieldset>
+      <input type="submit" id="login" value="Login" style="width: 100%;">
+      <input type="submit" id="cantLogin" value="Can't Login?" style="width: 100%;">
+    </form>
+    <p><div style="text-align: center">New to Pounce House?</div><br /><input type="submit" id="newAccount" value="Create a Free Account" style="width: 100%"></p>
+  </div>
+  <div id="createAccountBox">
+    <form>
+      <fieldset style="border: 0; padding-left: 0; padding-right: 0">
+        <label for="ca_username">Username</label>
+        <input type="text" name="ca_username" id="ca_username" value="" class="text ui-widget-content ui-corner-all" style="padding: 4px; width: 100%;">
+        <label for="ca_password">Password</label>
+        <input type="password" name="ca_password" id="ca_password" value="" class="text ui-widget-content ui-corner-all" style="padding: 4px; width: 100%;"><br/>
+        <label for="ca_confirm">Confirm Password</label>
+        <input type="password" name="ca_confirm" id="ca_confirm" value="" class="text ui-widget-content ui-corner-all" style="padding: 4px; width: 100%;"><br/>
+      </fieldset>
+      <input type="submit" id="createAccount" value="Create a Free Account" style="width: 100%">
+    </form>
+  </div>
+  <div id="lobby">
+    <table id="gameList" class="display" cellspacing="0" width="100%" style="color: #333;"></table>
+  </div>
+  <div id="errorMsg"></div>
+  </body>
+  <div id="createGame">
+    <form>
+      <fieldset style="border: 0; padding-left: 0; padding-right: 0;">
+        <label for="gameName">Game Name</label>
+        <input type="text" name="gameName" id="gameName" value="" class="text ui-widget-content ui-corner-all" style="padding: 4px; width: 100%;">
+        <label for="gameNumOfPlayers">Number of Players</label>
+        <input type="text" name="gameNumOfPlayers" id="gameNumOfPlayers" value="4" style="padding: 4px; width: 100%;">
+        <label for "gameType">Game Type</label><br />
+        <select name="gameType" id="gameType" style="padding: 4px; width: 100%">
+          <option selected="selected">Normal</option>
+        </select>
+      </fieldset>
+    </form>
+  </div> 
+  <div id="gameLobby">
+    <div style="float:left; width: 300px">
+      <p>Game Info</p>
+      <table id="gameInfo" class="display" cellspacing="0" width="100%" style="color: #ddd;">
+        <tr><th style="text-align: left">Name:</th><td id="giName"></td></tr>
+        <tr><th style="text-align: left">Owner:</th><td id="giOwner"></td></tr>
+        <tr><th style="text-align: left">Status:</th><td id="giStatus"></td></tr>
+        <tr><th style="text-align: left">Type:</th><td id="giType"></td></tr>
+        <tr><th style="text-align: left">Players:</th><td id="giPlayers"></td></tr>
+      </table>
+      <p>Players</p>
+      <table id="playerList" class="display" cellspacing="0" width="100%" style="color #ddd;">
+        <tr><td>jon</td></tr>
+        <tr><td>user2</td></tr>
+      </table>
+    </div>
+    <div style="left: 300px; right: 30px; top: 25px; bottom: 55px; position: absolute;">
+        <div id="glGameChatContainer" style="width:100%; height: 100%; padding: 4px; overflow-y: scroll;" class="ui-widget-content ui-corner-all">
+            <div id="glGameChat">
+            </div>
+        </div>
+        <input type="text" name="glEnterText" id="glEnterText" class="text ui-widget-content ui-corner-all" style="padding: 4px; width: 100%;">
+    </div>
+
+  </div>
+</html>
