@@ -1,6 +1,6 @@
 define(function(require) {
     var io      = require("socketio");
-    var socket  = io.connect('pounce.house');
+    var socket  = io.connect('http://localhost:3001/');
 
     //Set up object types
     var User    = require('./user');

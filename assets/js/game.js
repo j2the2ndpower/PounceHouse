@@ -1,5 +1,5 @@
 var mongoose        = require('mongoose');
-var gameSchema      = require('../schema/Game');
+var gameModel      = require('../schema/Game');
 var serverAI        = require('./ai');
 
 var serverGame = function(user) {
@@ -22,8 +22,6 @@ serverGame.prototype.create = function(data) {
     var self = this;
     var user = self.user;
 
-    var gameModel = mongoose.model('Game', gameSchema);
-
     self.schema = new gameModel({
         owner: data.user,
         maxPlayers: data.players,
@@ -34,19 +32,17 @@ serverGame.prototype.create = function(data) {
         playerList: [data.user]
     });
 
-    self.schema.save(function(err, record, numAffected) {
-        if (err) {
-            console.dir(err);
-            user.socket.emit("errorMsg", err);
-        } else {
-            user.socket.emit("joinedGame", record);
-            user.socket.emit('gameInfo', record);
-            user.sendGameList(true);
-            user.game = self;
+    self.schema.save().then((record) => {
+        user.socket.emit("joinedGame", record);
+        user.socket.emit('gameInfo', record);
+        user.sendGameList(true);
+        user.game = self;
 
-            //update static game list array
-            serverGame.gameList[record._id] = self;
-        }
+        //update static game list array
+        serverGame.gameList[record._id] = self;
+    }).catch((err) => {
+        console.dir(err);
+        user.socket.emit("errorMsg", err);
     });
 };
 
@@ -263,7 +259,7 @@ serverGame.prototype.onGameContinue = function(data) {
 serverGame.prototype.save = function() {
     var self = this;
 
-    self.schema.save(function(err) {
+    self.schema.save().catch((err) => {
         if (err) { console.dir(err); }
     });
 };

@@ -102,18 +102,16 @@ serverUser.prototype.sendGameList = function(broadcast) {
     var self = this;
     var socket = self.socket;
 
-    Game.find({status: "Waiting for Players"}, function(err, data) {
-        if (!err) {
-            var gameList = [], game;
-            for (game in data) {
-                gameList.push([data[game]._id, data[game].name, data[game].owner, data[game].players + '/' + data[game].maxPlayers, data[game].status, data[game].type]);
-            }
+    Game.find({status: "Waiting for Players"}).then((data) => {
+        var gameList = [], game;
+        for (game in data) {
+            gameList.push([data[game]._id, data[game].name, data[game].owner, data[game].players + '/' + data[game].maxPlayers, data[game].status, data[game].type]);
+        }
 
-            if (broadcast) {
-                io.sockets.in('lobby').emit('gameListUpdate', gameList);
-            } else {
-                socket.emit('gameListUpdate', gameList);
-            }
+        if (broadcast) {
+            io.sockets.in('lobby').emit('gameListUpdate', gameList);
+        } else {
+            socket.emit('gameListUpdate', gameList);
         }
     });
 };
@@ -151,7 +149,7 @@ serverUser.prototype.create = function(data) {
         }
 
         self.schema = new User(data);
-        self.schema.save(function(err) {
+        self.schema.save().catch((err) => {
             if (err) {
                 self.socket.emit("errorMsg", err);
             } else {
@@ -166,8 +164,8 @@ serverUser.prototype.login = function(data) {
     var socket = self.socket;
 
     if (data.reconnect) {
-        User.findOne({username: data.username, password: data.password}, function(err, user) {
-            if (!err && user) {
+        User.findOne({username: data.username, password: data.password}).then((user) => {
+            if (user) {
                 data.password = user.password;
                 data.reconnected = true;
                 socket.emit("loginSuccess", data);
@@ -177,7 +175,7 @@ serverUser.prototype.login = function(data) {
         return;
     }
 
-    User.findOne({username: data.username}, function(err, user) {
+    User.findOne({username: data.username}).then((user) => {
         if (!user) {
             socket.emit("errorMsg", {
                 name: "User Error",

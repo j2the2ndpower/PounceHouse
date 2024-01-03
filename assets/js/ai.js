@@ -346,15 +346,13 @@ serverAI.prototype.joinGame = function(game) {
 serverAI.prototype.sendGameList = function() {
     var self = this;
 
-    Game.find({status: "Waiting for Players"}, function(err, data) {
-        if (!err) {
-            var gameList = [], game;
-            for (game in data) {
-                gameList.push([data[game]._id, data[game].name, data[game].owner, data[game].players + '/' + data[game].maxPlayers, data[game].status, data[game].type]);
-            }
-
-            io.sockets.in('lobby').emit('gameListUpdate', gameList);
+    Game.find({status: "Waiting for Players"}).then((data) => {
+        var gameList = [], game;
+        for (game in data) {
+            gameList.push([data[game]._id, data[game].name, data[game].owner, data[game].players + '/' + data[game].maxPlayers, data[game].status, data[game].type]);
         }
+
+        io.sockets.in('lobby').emit('gameListUpdate', gameList);
     });
 };
 

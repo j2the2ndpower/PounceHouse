@@ -4,12 +4,13 @@ var User        = require('./assets/schema/User');
 var Game        = require('./assets/schema/Game');
 var serverUser  = require('./assets/js/user');
 var fileServer  = new static.Server('./');
+var { Server } = require("socket.io");
 
 var app         = require('http').createServer(function handler (request, response) {
         fileServer.serve(request, response); // this will return the correct file
 });
 
-io          = require('socket.io').listen(app);
+io          = new Server(app);
 
 app.listen(3001);
 
@@ -28,11 +29,10 @@ mongoose.connect(connStr).catch('error', err => {
   throw err;
 });
 
-/*    //clear Game list
-    Game.remove({}, function(err) {
-        if (err) { console.dir(err); }
-    });
-   */
+//clear Game list
+Game.deleteMany({}).catch((err) => {
+    if (err) { console.dir(err); }
+});
 
 // Listen for incoming connections from clients
 io.sockets.on('connection', function (socket) {
