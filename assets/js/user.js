@@ -140,7 +140,7 @@ serverUser.prototype.create = function(data) {
         return;
     }
 
-    User.findOne({username: data.username}, function(err, user) {
+    User.findOne({username: data.username}).then((user) => {
         if (user) {
             socket.emit("errorMsg", {
                 name: 'User Error',

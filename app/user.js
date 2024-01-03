@@ -25,6 +25,7 @@ define(function() {
     };
 
     user.prototype.create = function(username, password, confirmp) {
+	console.log("Sending user create event: ", username, password, confirmp);
         this.socket.emit('newUser', {
             username: username, 
             password: password, 

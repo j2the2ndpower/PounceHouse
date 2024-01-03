@@ -13,7 +13,7 @@ io          = require('socket.io').listen(app);
 
 app.listen(3001);
 
-var connStr = "mongodb://admin:a5f7ebfab2e98008b217f966f85897ef34ebc340ceef7a77@localhost:27017/pounce?authSource=admin";
+var connStr = "mongodb://admin:a5f7ebfab2e98008b217f966f85897ef34ebc340ceef7a77@pounce.house:27017/pounce?authSource=admin";
 var gameSlotCount = {};
 var gameWaiting = {};
 var gameLoading = {};
@@ -47,4 +47,4 @@ io.sockets.on('connection', function (socket) {
     });
 });
 
-console.log('Server running at http://127.0.0.1:3000/');
+console.log('Server running at http://127.0.0.1:3001/');
