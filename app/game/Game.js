@@ -264,12 +264,10 @@ define(["require", "pixi/pixi.dev", "./Deck", "./Card", "./Slot", 'jquery-ui/jqu
         var self = this, i, score;
         clearInterval(self.scoreInterval);
         self.stage.removeChild(self.pounceText);
-        var html = '<table id="scoresheet" cellpadding=4 cellspacing=10><tr><td class="th" style="text-align: left">Player</td><td class="th">Cards Played</td><td class="th">Cards Remaining</td><td class="th">Pounce!</td><td class="th">Total</td></tr>';
+        var html = '<table id="scoresheet" cellpadding=4 cellspacing=10><tr><td class="th" style="text-align: left">Player</td><td class="th">Cards Played</td><td class="th">Cards Remaining</td><td class="th">Pounce!</td><td class="th">Score</td><td class="th">Total</td></tr>';
         for (i in data.score) {
             score = data.score[i];
-            score.pounce *= 10;
-            score.total = score.points - score.goalLeft + score.pounce;
-            html += '<tr ' + (data.user === i ? 'class="highlight"' : '') + '><td style="text-align: left">' + i + '</td><td>' + score.points + '</td><td>' + (-score.goalLeft) + '</td><td>' + score.pounce + '</td><td>' + score.total + '</td></tr>';
+            html += '<tr ' + (data.user === i ? 'class="highlight"' : '') + '><td style="text-align: left">' + i + '</td><td>' + score.points + '</td><td>' + (-score.goalLeft) + '</td><td>' + score.pounce + '</td><td>' + score.score + '</td><td>' + score.total + '</tr>';
         }
         html += '</table>';
         $('#scoreScreen').html(html);

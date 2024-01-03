@@ -3,20 +3,26 @@ var gameModel      = require('../schema/Game');
 var serverAI        = require('./ai');
 
 var serverGame = function(user) {
-    this.init();
+    this.init(true);
     this.schema = {};
     this.bots = [];
     this.user = user;
 };
 
-serverGame.prototype.init = function() {
+serverGame.prototype.init = function(resetScore) {
     this.slotCount = 0;
     this.usersReady = [];
     this.usersLoading = [];
     this.usersStuck = [];
     this.slots = {};
-    this.score = {};
+    if (resetScore) {
+        this.resetScore();
+    }
 };
+
+serverGame.prototype.resetScore = function() {
+    this.score = {};
+}
 
 serverGame.prototype.create = function(data) {
     var self = this;
@@ -67,18 +73,20 @@ serverGame.prototype.addBot = function() {
 
 serverGame.prototype.start = function() {
     var self = this, u;
-    self.init();
+    self.init(false);
 
     self.schema.status = "Playing";
     self.save();
 
     //init user scores
     for (u = 0; u < self.schema.playerList.length; u++) {
-        self.score[self.schema.playerList[u]] = {
-            points: 0,
-            pounce: 0,
-            goalLeft: 13
-        };
+        if (!self.score[self.schema.playerList[u]]) {
+            self.score[self.schema.playerList[u]] = {};
+        }
+        self.score[self.schema.playerList[u]].points = 0;
+        self.score[self.schema.playerList[u]].pounce = 0;
+        self.score[self.schema.playerList[u]].score = 0;
+        self.score[self.schema.playerList[u]].goalLeft = 13;
     }
 
     self.broadcast('startGame', self.schema.toObject());
@@ -220,8 +228,17 @@ serverGame.prototype.onGameWin = function(data) {
     var self = this;
 
     console.log("User (" + data.user + ") won game: " + data.game);
-    self.score[data.user].pounce++;
+    self.score[data.user].pounce = 10;
+
+    for (i in self.score) {
+        score = self.score[i];
+        score.score = score.points - score.goalLeft + score.pounce;
+        score.total = (score.total ?? 0) + score.score;
+    }
+
     data.score = self.score;
+    console.log("Game over data:");
+    console.dir(data);
     self.broadcast('gameOver', data);
     console.log("Waiting for users to be ready for next round...");
 };

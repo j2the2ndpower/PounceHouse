@@ -3,7 +3,7 @@ var Deck = require('./deck');
 var cardData = require('../img/cards.json');
 var serverGame = require('./game');
 
-var aiNames = ['Rocky E Bola',
+var aiNames = ['Rocky Bola',
                'Silly Susan',
                'Scary Sam',
                'Tastless Ted',
@@ -11,9 +11,9 @@ var aiNames = ['Rocky E Bola',
                'Patty Cake'];
 
 var serverAI = function() {
-    var self = this;
+    var self = this; 
     self.difficulty = 'normal';
-    self.awareness = 0.75;
+    self.awareness = 0.50;
 
     self.listening = {};
     self.create();
@@ -96,7 +96,8 @@ serverAI.prototype.deal = function() {
 serverAI.prototype.create = function() {
     var self = this;
 
-    self.name = '[BOT] ' + aiNames[Math.floor(Math.random()*aiNames.length)];
+    var rand = Math.floor(Math.random()*aiNames.length);
+    self.name = '[BOT] ' + aiNames[rand];
 
     self.listen('startGame', function(data) {
         //clear memory
@@ -133,12 +134,14 @@ serverAI.prototype.create = function() {
     };
 
     self.listen('gameReady', function(data) {
+        self.gameActive = true;
         setTimeout(function() {
             playLoop();
         }, 1500);
     });
 
     self.listen('gameOver', function(data) {
+        self.gameActive = false;
         clearTimeout(self.thinking);
 
         self.game.onGameContinue({
@@ -458,6 +461,8 @@ serverAI.prototype.playCardSlot = function(card, slot, source) {
 
 serverAI.prototype.think = function() {
     var self = this;
+
+    if (!self.gameActive) return;
 
     //Scan field -- difficulty determines awareness
     for (var sid in self.stacks) {
